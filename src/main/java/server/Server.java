@@ -52,7 +52,7 @@ public class Server {
         try {
             System.out.println("comenzando Servidor");
             status.setText("starting Server");
-            Runtime.getRuntime().exec("rmiregistry 2020");
+            Runtime.getRuntime().exec("rmiregistry 2000");
             Registry registry = LocateRegistry.createRegistry(2000);
 
             

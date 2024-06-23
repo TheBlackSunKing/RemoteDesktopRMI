@@ -20,11 +20,11 @@ import view.WelcomeView;
  */
 public class DesktopClient {
     private IRemoteDesktop desktopClient;
-    public DesktopClient() {
+    public DesktopClient(String IpNumber) {
         
         // TODO add your handling code here:
         //this.setVisible(false);
-        String IpNumber = "localhost";
+        //String IpNumber = "localhost";
         try {        
             Registry registry = LocateRegistry.getRegistry(IpNumber, 2000);
             desktopClient = (IRemoteDesktop)registry.lookup("desktopServer");  //getting a remote reference       

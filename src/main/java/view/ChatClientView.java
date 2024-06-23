@@ -41,7 +41,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
      * @param frame
      * @param chat
      */
-    public ChatClientView(JFrame frame, ChatInterface chat, String username)  throws RemoteException {
+    public ChatClientView(JFrame frame, ChatInterface chat, String username, String ipInput)  throws RemoteException {
         initComponents();
         this.chat = chat;
         this.username = username;
@@ -52,7 +52,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         this.frame = frame;
         //chatListTextArea.setMaximumSize((3        
         frame.setSize(800, 600);
-        DesktopClient desktop = new DesktopClient();
+        DesktopClient desktop = new DesktopClient(ipInput);
     }
      public ChatClientView(JFrame frame, ChatInterface chat, String username, Server server)  throws RemoteException {
         initComponents();

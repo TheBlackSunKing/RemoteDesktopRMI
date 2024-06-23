@@ -123,7 +123,7 @@ public class WelcomeView extends javax.swing.JPanel {
             Registry registry = LocateRegistry.getRegistry(IpNumber.getText(), 2000);
             ChatInterface chat = (ChatInterface)registry.lookup("chatServer");  //getting a remote reference       
             frame.getContentPane().removeAll();
-            frame.getContentPane().add(new ChatClientView(frame,chat,nameField.getText()));
+            frame.getContentPane().add(new ChatClientView(frame,chat,nameField.getText(),IpNumber.getText()));
         } catch (Exception e) {
            this.setVisible(true);
            this.ErrorMessage.setText("Error de conexion");
