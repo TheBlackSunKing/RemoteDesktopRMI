@@ -1,0 +1,24 @@
+-classpath
+'C:/Users/Usuario/.m2/repository/org/netbeans/external/AbsoluteLayout/RELEASE190/AbsoluteLayout-RELEASE190.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'21'
+-sourcepath
+'C:/Users/Usuario/OneDrive/Documents/NetBeansProjects/JavaSimpleRMI/src/main/java;C:/Users/Usuario/OneDrive/Documents/NetBeansProjects/JavaSimpleRMI/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2024. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/Usuario/OneDrive/Documents/NetBeansProjects/JavaSimpleRMI/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'JavaSimpleRMI 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'JavaSimpleRMI 1.0-SNAPSHOT API'
