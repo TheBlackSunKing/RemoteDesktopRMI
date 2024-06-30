@@ -20,7 +20,7 @@ import server.RMIServer;
 import server.TCPServer;
 
 /**
- *
+ *  La vista del Servidor
  * @author Usuario
  */
 public class ServerView extends javax.swing.JPanel {
@@ -28,7 +28,8 @@ public class ServerView extends javax.swing.JPanel {
     RMIServer Rmiserver;
     TCPServer TcpServer;
     /**
-     * Creates new form ServerView
+     * Crear nueva forma ServerView y inicializa los servidores.
+     * @param frame: Recibe el framde en donde se creo.
      */
     
     public ServerView(JFrame frame) {
@@ -46,6 +47,11 @@ public class ServerView extends javax.swing.JPanel {
         //server.run(Status);
         
     }
+    /**
+     * Crear nueva forma ServerView
+     * @param frame: Recibe el framde en donde se creo.
+     * @param server: Recibe el servidor activo
+     */
     public ServerView(JFrame frame, RMIServer server) {
         frame.setSize(300, 400);
         this.frame = frame;

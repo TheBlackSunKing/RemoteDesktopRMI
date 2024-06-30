@@ -27,8 +27,8 @@ import remote.desktopview.DesktopClient;
 import server.RMIServer;
 
 /**
- *
- * @author Usuario
+ * La vista del Chat
+ * @author Jose
  */
 public class ChatClientView extends javax.swing.JPanel implements MouseListener, KeyListener {
     JFrame frame;
@@ -39,11 +39,13 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
     List<String> users = new ArrayList<>();
     Message last;
     /**
-     * Creates new form ChatClientView
+     * Crea una vista del chat
      * @param frame
      * @param chat
+     * @param port
+     * @param username
      */
-    public ChatClientView(JFrame frame, ChatInterface chat, String username, String ipInput)  throws RemoteException {
+    public ChatClientView(JFrame frame, ChatInterface chat, String username, String ipInput, int port)  throws RemoteException {
         initComponents();
         this.chat = chat;
         this.username = username;
@@ -54,8 +56,15 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         this.frame = frame;
         //chatListTextArea.setMaximumSize((3        
         frame.setSize(800, 600);
-        DesktopClient desktop = new DesktopClient(ipInput);
+        DesktopClient desktop = new DesktopClient(ipInput,port);
     }
+     /**
+     * Crea una vista del chat para el servidor.
+     * @param frame
+     * @param chat
+     * @param username
+     * @param server
+     */
      public ChatClientView(JFrame frame, ChatInterface chat, String username, RMIServer server)  throws RemoteException {
         initComponents();
         this.server = server;
@@ -375,6 +384,9 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
             }
         }
     }
+    /**
+     * Este metodo actualiza el chat.
+     */
     public void displayChatList() throws RemoteException {
        
 

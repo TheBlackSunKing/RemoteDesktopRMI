@@ -11,14 +11,15 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * Primera vista de la interfaz grafica. de aqui se puede entrar a la pestaña de servidor para crear uno
+ * O conectarse al servidor.
  * @author Usuario
  */
 public class WelcomeView extends javax.swing.JPanel {
     JFrame frame;
     /**
-     * Creates new form WelcomeView
-     * @param frame
+     * Crea la nueva forma WelcomeView
+     * @param frame: Recibe el JFrame de donde fue creado.
      */
     public WelcomeView(JFrame frame) {
         this.frame = frame;
@@ -141,10 +142,11 @@ public class WelcomeView extends javax.swing.JPanel {
         // TODO add your handling code here:
         this.setVisible(false);
         try {        
-            Registry registry = LocateRegistry.getRegistry(IpNumber.getText(), 2000);
+            int port = Integer.parseInt(portTextField.getText());
+            Registry registry = LocateRegistry.getRegistry(IpNumber.getText(), port);
             ChatInterface chat = (ChatInterface)registry.lookup("chatServer");  //getting a remote reference       
             frame.getContentPane().removeAll();
-            frame.getContentPane().add(new ChatClientView(frame,chat,nameField.getText(),IpNumber.getText()));
+            frame.getContentPane().add(new ChatClientView(frame,chat,nameField.getText(),IpNumber.getText(),port));
         } catch (Exception e) {
            this.setVisible(true);
            this.ErrorMessage.setText("Error de conexion");

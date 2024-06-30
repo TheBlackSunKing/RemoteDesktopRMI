@@ -20,11 +20,12 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import remote.desktop.ComputerInfo;
 import remote.desktop.DriveInfo;
 import remote.desktop.IRemoteDesktop;
 /**
- *
+ * Vista del escritorio compartido
  * @author Usuario
  */
 public class DesktopView extends javax.swing.JPanel {
@@ -39,6 +40,17 @@ public class DesktopView extends javax.swing.JPanel {
     private IRemoteDesktop remote_obj;
     private String quality;
     private JFrame frame;
+    private DesktopInfoView infoView;
+    
+    
+    /**
+     * 
+     * @param  remote_obj:  Recibe el objeto remoto del escritorio compartido del servidor.
+     * @param frame: Recibe el frame donde el panel es creado.
+     * 
+    * 
+    * @see         Image
+    */
     public DesktopView(IRemoteDesktop remote_obj, JFrame frame) {
         this.screen_size = Toolkit.getDefaultToolkit().getScreenSize();
         initComponents();
@@ -56,6 +68,15 @@ public class DesktopView extends javax.swing.JPanel {
         } catch (Exception ex) {
             Logger.getLogger(DesktopView.class.getName()).log(Level.SEVERE, null, ex);
         }
+        SwingUtilities.invokeLater
+        (() -> {
+            infoView = new DesktopInfoView();         
+            infoView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            infoView.setVisible(true);
+
+            
+        });
+        
         
     }
 
@@ -113,30 +134,42 @@ public class DesktopView extends javax.swing.JPanel {
     }
     private void run () throws Exception{
         byte[] dgram;
+        String infoMessage = "Informacion de equipo: \n";
         //System.out.println(this.remote_obj.getRamUsageServer());
         double ramUsageRatio = this.remote_obj.getRamUsageServer();
         double ramRatio = ramUsageRatio;
-        System.out.print("RAM USAGE RATIO: ");
+        //System.out.print("RAM USAGE RATIO: ");
+        infoMessage += "USO DEL RAM:";
         while (ramUsageRatio > 0){
-            System.out.print("|");
+            //System.out.print("|");
+            infoMessage += "|";
             ramUsageRatio -=0.02;
         }
-        System.out.println("("+ (int)(ramRatio*100) + "%)");
-        System.out.println("\nRam: " + this.remote_obj.getRamMemories()[0]+" GB");
-        System.out.println(this.remote_obj.getRamMemories()[1]);
-        System.out.println("CPUs: "+ this.remote_obj.getCpus());
-       // System.out.println(this.remote_obj.getCpus());
+        
+       // System.out.println("("+ (int)(ramRatio*100) + "%)");
+        infoMessage += "("+ (int)(ramRatio*100) + "%)\n";
+        infoMessage += "Ram: " + this.remote_obj.getRamMemories()[0]+" GB\n";
+        infoMessage += "Ram Extra:" + this.remote_obj.getRamMemories()[1] + " GB \n";
+        infoMessage += "CPUs: "+ this.remote_obj.getCpus() + "\n";
+        //System.out.println("\nRam: " + this.remote_obj.getRamMemories()[0]+" GB");
+        //System.out.println(this.remote_obj.getRamMemories()[1]);
+        // System.out.println("CPUs: "+ this.remote_obj.getCpus());
+        // System.out.println(this.remote_obj.getCpus());
         ComputerInfo computerInfo = this.remote_obj.getComputerInformation();
         for(DriveInfo drive :  computerInfo.getDrives()) {
                 long total_space = drive.getTotalSpace();
                 long usage_space = total_space - drive.getFreeSpace();
                 String name = drive.getName();
-                System.out.println(name);
-                System.out.println("Espacio Total: " + total_space + " GBs");
-                System.out.println("Espacio Usado: " + usage_space + " GBs");
+                infoMessage +="_______________________________\n";
+                infoMessage += name + "\n";
+                //System.out.println(name);
+                infoMessage +="Espacio Total: " + total_space + " GBs\n";
+                //System.out.println("Espacio Total: " + total_space + " GBs");
+                infoMessage +="Espacio Usado: " + usage_space + " GBs\n";
+                //System.out.println("Espacio Usado: " + usage_space + " GBs");
+                
         }
-        System.out.print("WHY:   "+ this.getSize());
-        System.out.print("WHY:   "+ frame.getSize());
+
         dgram = this.remote_obj.takeScreenshotServer(quality);        
         ByteArrayInputStream bis = new ByteArrayInputStream(dgram);
         //System.out.print(bis);
@@ -147,6 +180,7 @@ public class DesktopView extends javax.swing.JPanel {
 
         //this.screen_label.setText(quality);
         this.screen_label.setIcon(new ImageIcon(screenshot));
+        this.infoView.setInfoArea(infoMessage);
     }
     public void Close(){
         setVisible(false); //you can't see me!

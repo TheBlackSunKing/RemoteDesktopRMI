@@ -15,19 +15,18 @@ import view.ChatClientView;
 import view.WelcomeView;
 
 /**
- *
+ * Cliente del RMI que busca especificamente el acesso al objeto remoto IRemotDesktop del servidor para enviarlo a la vista DesktopView
  * @author Usuario
- * Este es el cliente 
  */
 public class DesktopClient {
     private IRemoteDesktop desktopClient;
-    public DesktopClient(String IpNumber) {
+    public DesktopClient(String IpNumber, int port) {
         
         // TODO add your handling code here:
         //this.setVisible(false);
         //String IpNumber = "localhost";
         try {        
-            Registry registry = LocateRegistry.getRegistry(IpNumber, 2000);
+            Registry registry = LocateRegistry.getRegistry(IpNumber, port);
             desktopClient = (IRemoteDesktop)registry.lookup("desktopServer");  //getting a remote reference       
             System.out.println("Conectado a Servidor");
 
