@@ -143,10 +143,11 @@ public class WelcomeView extends javax.swing.JPanel {
         this.setVisible(false);
         try {        
             int port = Integer.parseInt(portTextField.getText());
+            String password = new String (this.jPasswordField1.getPassword());
             Registry registry = LocateRegistry.getRegistry(IpNumber.getText(), port);
             ChatInterface chat = (ChatInterface)registry.lookup("chatServer");  //getting a remote reference       
             frame.getContentPane().removeAll();
-            frame.getContentPane().add(new ChatClientView(frame,chat,nameField.getText(),IpNumber.getText(),port));
+            frame.getContentPane().add(new ChatClientView(frame,chat,nameField.getText(),IpNumber.getText(),port,password));
         } catch (Exception e) {
            this.setVisible(true);
            this.ErrorMessage.setText("Error de conexion");
@@ -154,7 +155,9 @@ public class WelcomeView extends javax.swing.JPanel {
         }        
         
     }//GEN-LAST:event_enterChatBurronActionPerformed
-
+    public void setErrorMessage (String Text){
+        this.ErrorMessage.setText(Text);
+    }
     private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_portTextFieldActionPerformed

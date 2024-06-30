@@ -4,10 +4,7 @@
  */
 package server;
 
-/**
- *
- * @author Usuario
- */
+
 
 
 import java.io.DataInputStream;
@@ -25,7 +22,10 @@ import java.net.InetSocketAddress;
 import java.io.DataInputStream;
 
 import java.io.DataOutputStream;
-
+/**
+ * Es la clase que maneja las conexiones TCP por parte del servidor
+ * @author Usuario
+ */
 public class TCPServer {
     //private MainChatPanel main_chat_panel;
 
@@ -45,14 +45,24 @@ public class TCPServer {
         this.is_has_partner = false;
         //this.main_chat_panel = main_chat_panel;
     }
-
+    /**
+     * Empieza a correr Listening to tcpServer
+     * Al crear un servidor se usa el puerto seleciconado +1 debido a que no se puede tener el RMI y el TCP en el mismo port
+     * @param host: Recibe el Ip local del servidor.
+     * @param port: Recibe el puerto por el que se desea abrir.
+     * @param password: Recibe la contraseña.
+     * 
+     * @throws IOException
+     * 
+     */
     public void startListeningOnTcpServer(String host, int port, String password) throws IOException {
         if(this.is_listening == false) {
-            InetSocketAddress endpoint = new InetSocketAddress(host, port);
+            InetSocketAddress endpoint = new InetSocketAddress(host, port+1);
             this.password = password;
             this.server = new ServerSocket();
             this.server.bind(endpoint);
             this.is_listening = true;
+            System.out.println("Servidor TCP Creado");
         }
     }
 
@@ -81,7 +91,11 @@ public class TCPServer {
         else result = "false";
         dos.writeUTF(result);
     }
-
+    
+    public boolean getis_has_partner(){
+        return this.is_has_partner;
+    }
+    
     public Vector<String> getAllIpv4AddressesOnLocal() throws SocketException {
         Vector<String> ipv4_addresses = new Vector<>();
         Enumeration networks = NetworkInterface.getNetworkInterfaces();

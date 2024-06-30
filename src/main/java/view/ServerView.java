@@ -5,6 +5,7 @@
 package view;
 
 import chat.ChatInterface;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -57,6 +58,7 @@ public class ServerView extends javax.swing.JPanel {
         this.frame = frame;
         initComponents();
         this.Rmiserver = server;
+        
         this.setVisible(true);        
         this.setSize(600,400);
         //server.run(Status);
@@ -94,6 +96,9 @@ public class ServerView extends javax.swing.JPanel {
         portTextField = new javax.swing.JTextField();
         ipListComboText = new javax.swing.JComboBox<>();
         startServerButton = new javax.swing.JButton();
+        Password = new javax.swing.JPasswordField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -142,7 +147,7 @@ public class ServerView extends javax.swing.JPanel {
         jPanel1.add(portTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 110, -1));
 
         ipListComboText.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(ipListComboText, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, -1, -1));
+        jPanel1.add(ipListComboText, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
 
         startServerButton.setText("Encender Servidor");
         startServerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -151,6 +156,15 @@ public class ServerView extends javax.swing.JPanel {
             }
         });
         jPanel1.add(startServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, -1, -1));
+
+        Password.setText("jPasswordField1");
+        jPanel1.add(Password, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, -1, -1));
+
+        jLabel2.setText("Contraseña");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 270, -1, -1));
+
+        jLabel3.setText("Puerto");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 180, -1, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 400));
     }// </editor-fold>//GEN-END:initComponents
@@ -175,6 +189,25 @@ public class ServerView extends javax.swing.JPanel {
     private void startServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startServerButtonActionPerformed
         
         Rmiserver.run(this.Status,this.portTextField.getText());        // TODO add your handling code here:
+        String selectedItem = this.ipListComboText.getSelectedItem().toString();
+        int port = Integer.parseInt(portTextField.getText());
+        System.out.println(selectedItem);
+        String passwordString =  new String(this.Password.getPassword());
+        try {
+            this.TcpServer.startListeningOnTcpServer(selectedItem, port, passwordString );
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ServerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        new Thread(() -> {
+            while (!this.TcpServer.getis_has_partner())
+                try {
+                    this.TcpServer.waitingConnectionFromClient();
+                } catch (IOException ex) {
+                    Logger.getLogger(ServerView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }).start();
         //this.ipListComboText.getSelectedItem().toString().trim(),
         this.startServerButton.setEnabled(false);
         this.jButton1.setEnabled(true);
@@ -182,10 +215,13 @@ public class ServerView extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField Password;
     private javax.swing.JLabel Status;
     private javax.swing.JComboBox<String> ipListComboText;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField portTextField;

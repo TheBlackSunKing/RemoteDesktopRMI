@@ -6,10 +6,12 @@ package view;
 
 import chat.ChatInterface;
 import chat.Message;
+import client.TCPClient;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -25,6 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultCaret;
 import remote.desktopview.DesktopClient;
 import server.RMIServer;
+import server.TCPServer;
 
 /**
  * La vista del Chat
@@ -34,6 +37,15 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
     JFrame frame;
     String username;
     RMIServer server;
+    TCPServer tcpserver;
+    TCPClient tcpClient;
+    
+    private String ipInput;
+    private int port;
+    private String password;
+        
+    
+    
     ChatInterface chat;
     List<Message> msgs = new ArrayList<>();
     List<String> users = new ArrayList<>();
@@ -45,18 +57,35 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
      * @param port
      * @param username
      */
-    public ChatClientView(JFrame frame, ChatInterface chat, String username, String ipInput, int port)  throws RemoteException {
-        initComponents();
-        this.chat = chat;
-        this.username = username;
-        DefaultCaret caret = (DefaultCaret)chatListTextArea.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        chat.login(username);               
-        execute();
-        this.frame = frame;
-        //chatListTextArea.setMaximumSize((3        
-        frame.setSize(800, 600);
-        DesktopClient desktop = new DesktopClient(ipInput,port);
+    public ChatClientView(JFrame frame, ChatInterface chat, String username, String ipInput, int port, String password)  throws RemoteException {
+        
+        this.ipInput = ipInput;
+        this.port = port;
+        this.password = password;
+
+        try {
+            initComponents();
+            this.chat = chat;
+            this.username = username;
+            this.frame = frame;
+            this.tcpClient = new TCPClient(this);
+            tcpConnect();
+            DefaultCaret caret = (DefaultCaret)chatListTextArea.getCaret();
+            caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+            chat.login(username);
+            
+            execute();
+            
+            
+            frame.setSize(800, 600);
+            DesktopClient desktop = new DesktopClient(ipInput,port);
+        } catch (IOException ex) {
+            this.server = null;
+            this.tcpClient = null;
+            enterWelcomeView("Mala clave");
+            Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
     }
      /**
      * Crea una vista del chat para el servidor.
@@ -266,7 +295,8 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         // TODO add your handling code here:
         try {
             chat.logout(username);  //use the reference "chat" to call remote methods
-            System.exit(0);
+            chat = null;
+            enterWelcomeView("Salido");
             //catch the exceptions may occur, Rubbish URL, RemoteException
         } catch (RemoteException ex) {
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -307,7 +337,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         try {
             chat.sendMessage(message);
         } catch (RemoteException ex) {
-            enterWelcomeView();
+            enterWelcomeView(ex.toString());
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
             
         }
@@ -328,22 +358,48 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
     private javax.swing.JButton sendButton;
     private javax.swing.JTextArea userListTextArea;
     // End of variables declaration//GEN-END:variables
-    private void enterWelcomeView() {                                                
-        // TODO add your handling code here:
-       
+    
+    //
+    /**
+     * Cierra toda las conexiones y devuelbe la pantalla a la vista de welcome.
+     * @param Message: Mensaje de error que se desea monstrar en la pantall de welcome
+     */
+    public void enterWelcomeView(String Message) {                                                
+        try {
+            // TODO add your handling code here:
+            this.chat.logout(username);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         this.chat = null;
+        this.server = null;
+        
         this.setVisible(false);
+        WelcomeView temp = new WelcomeView(frame);
+        temp.setErrorMessage(Message);
         frame.getContentPane().removeAll();
-        frame.getContentPane().add(new WelcomeView(frame));
-        //frame.getContentPane().add(welcomeView);
+        frame.getContentPane().add(temp);
+        
         frame.setSize(350,400);
+        frame.pack();
+        frame.setVisible(true);
+        //frame.getContentPane().add(welcomeView);
+        //f
         
     } 
     private void addListeners() {
 
          chatInputText.addKeyListener(this);
     }
+    
+    private void tcpConnect() throws IOException{
+
+         this.tcpClient.startConnectingToTcpServer(ipInput, port+1, password);
+
+    }
     private void execute() {
+       
         userListTextArea.setLineWrap(true);     // to remove horizontal scrolling bar 
         //frame.setTitle("Public Chat");  
         //setImages();
@@ -351,13 +407,14 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         this.nameLabel.setText(username);
         this.setVisible(true);
         //setLocationRelativeTo(null);            // to visible the GUI in the middle of the screen
+       
         Thread t1 = new Thread(() -> {
             while (true) {
                 refresh();                  // this thread is used to refresh the chat window by every second
                 try {                       // to display whole chat list
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
-                    enterWelcomeView();
+                    enterWelcomeView(ex.toString());
                     Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
                     return;
                 }
@@ -371,7 +428,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
             displayUserList();
         } catch (RemoteException ex) {
             System.out.print("Servidor caido");
-            enterWelcomeView();
+            enterWelcomeView("Servidor Caido");
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -436,7 +493,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
                                 + "' width=50 height=50 /> </td></tr>";
                     }
                 } catch (ParseException ex) {
-                    enterWelcomeView();
+                    enterWelcomeView(ex.toString());
                     Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
                 }                        
             }
