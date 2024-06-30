@@ -39,7 +39,10 @@ public class IRemoteDesktopImpl extends UnicastRemoteObject implements IRemoteDe
         BufferedImage screenshot = this.mr_robot.createScreenCapture(bounds);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.setUseCache(false); // TODO: not using disk cache (using ram)
-        ImageIO.write(screenshot, "png", bos);
+        if (quality.equals("high"))
+            ImageIO.write(screenshot, "png", bos);
+        else
+            ImageIO.write(screenshot, "jpg", bos);
         return bos.toByteArray();
     }
 
@@ -99,6 +102,23 @@ public class IRemoteDesktopImpl extends UnicastRemoteObject implements IRemoteDe
     @Override
     public int getCpus() throws RemoteException {
         return this.os.getAvailableProcessors();
+    }
+    @Override
+    public ComputerInfo getComputerInformation() throws RemoteException {
+        ComputerInfo pc_info = new ComputerInfo(this.os.getName());
+        
+        
+        for(File file : File.listRoots()) {
+            pc_info.getDrives().add(
+                new DriveInfo(
+                    FileSystemView.getFileSystemView().getSystemDisplayName(file),
+                    file.getFreeSpace() / IRemoteDesktopImpl.GB,
+                    file.getTotalSpace() / IRemoteDesktopImpl.GB
+                )
+            );
+        }
+        
+        return pc_info;
     }
     
 }

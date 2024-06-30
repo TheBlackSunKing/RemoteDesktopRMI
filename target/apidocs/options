@@ -6,14 +6,14 @@
 -source
 '21'
 -sourcepath
-'C:/Users/Usuario/Documents/NetBeansProjects/JavaSimpleRMI/src/main/java;C:/Users/Usuario/Documents/NetBeansProjects/JavaSimpleRMI/target/generated-sources/annotations'
+'C:/Users/Usuario/OneDrive/Documents/NetBeansProjects/JavaSimpleRMI/src/main/java;C:/Users/Usuario/OneDrive/Documents/NetBeansProjects/JavaSimpleRMI/target/generated-sources/annotations'
 -author
 -bottom
 'Copyright &#169; 2024. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'C:/Users/Usuario/Documents/NetBeansProjects/JavaSimpleRMI/target/apidocs'
+'C:/Users/Usuario/OneDrive/Documents/NetBeansProjects/JavaSimpleRMI/target/apidocs'
 -docencoding
 'UTF-8'
 -doctitle

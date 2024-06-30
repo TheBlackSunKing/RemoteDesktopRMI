@@ -43,17 +43,21 @@ public class WelcomeView extends javax.swing.JPanel {
         enterChatBurron = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         ErrorMessage = new javax.swing.JLabel();
+        portTextField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        jLabel5 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(153, 153, 255));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        createServerButton.setText("Crear Servidor");
+        createServerButton.setText("Pestaña de servidor");
         createServerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createServerButtonActionPerformed(evt);
             }
         });
-        add(createServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, 130, -1));
+        add(createServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 180, -1));
 
         IpNumber.setText("localhost");
         IpNumber.addActionListener(new java.awt.event.ActionListener() {
@@ -61,28 +65,28 @@ public class WelcomeView extends javax.swing.JPanel {
                 IpNumberActionPerformed(evt);
             }
         });
-        add(IpNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 210, 170, -1));
+        add(IpNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, 170, -1));
 
         nameField.setText("Nombre");
-        add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 170, -1));
+        add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 170, -1));
 
         jLabel1.setText("Nombre:");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 118, -1, -1));
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
-        jLabel2.setText("IP");
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 207, 99, -1));
+        jLabel2.setText("IP:");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 99, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Historic", 0, 48)); // NOI18N
         jLabel3.setText("JAVA RMI");
         add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, 43));
 
-        enterChatBurron.setText("Entrar a un chat");
+        enterChatBurron.setText("Conectarse como cliente");
         enterChatBurron.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enterChatBurronActionPerformed(evt);
             }
         });
-        add(enterChatBurron, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 130, -1));
+        add(enterChatBurron, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 110, -1));
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
@@ -99,9 +103,26 @@ public class WelcomeView extends javax.swing.JPanel {
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 330, 110, 70));
 
-        ErrorMessage.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        ErrorMessage.setForeground(new java.awt.Color(255, 0, 0));
-        add(ErrorMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 280, -1, -1));
+        ErrorMessage.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        ErrorMessage.setForeground(new java.awt.Color(255, 255, 255));
+        add(ErrorMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 260, 170, 40));
+
+        portTextField.setText("port");
+        portTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portTextFieldActionPerformed(evt);
+            }
+        });
+        add(portTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, 170, -1));
+
+        jLabel4.setText("Port:");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 99, -1));
+
+        jPasswordField1.setText("jPasswordField1");
+        add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 220, 170, -1));
+
+        jLabel5.setText("Contraseña");
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void IpNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IpNumberActionPerformed
@@ -132,6 +153,10 @@ public class WelcomeView extends javax.swing.JPanel {
         
     }//GEN-LAST:event_enterChatBurronActionPerformed
 
+    private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_portTextFieldActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ErrorMessage;
@@ -141,7 +166,11 @@ public class WelcomeView extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField nameField;
+    private javax.swing.JTextField portTextField;
     // End of variables declaration//GEN-END:variables
 }

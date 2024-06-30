@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultCaret;
 import remote.desktopview.DesktopClient;
-import server.Server;
+import server.RMIServer;
 
 /**
  *
@@ -31,7 +33,7 @@ import server.Server;
 public class ChatClientView extends javax.swing.JPanel implements MouseListener, KeyListener {
     JFrame frame;
     String username;
-    Server server;
+    RMIServer server;
     ChatInterface chat;
     List<Message> msgs = new ArrayList<>();
     List<String> users = new ArrayList<>();
@@ -54,7 +56,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         frame.setSize(800, 600);
         DesktopClient desktop = new DesktopClient(ipInput);
     }
-     public ChatClientView(JFrame frame, ChatInterface chat, String username, Server server)  throws RemoteException {
+     public ChatClientView(JFrame frame, ChatInterface chat, String username, RMIServer server)  throws RemoteException {
         initComponents();
         this.server = server;
         this.chat = chat;
@@ -90,6 +92,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         sendButton = new javax.swing.JButton();
         panel = new javax.swing.JScrollPane(chatListTextArea,javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chatListTextArea = new javax.swing.JTextPane();
+        jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -174,6 +177,13 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         chatListTextArea.setMaximumSize(new java.awt.Dimension(600, 800));
         panel.setViewportView(chatListTextArea);
 
+        jButton1.setText("Archivo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -192,7 +202,9 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(chatInputText, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(20, 20, 20))))
         );
         jPanel2Layout.setVerticalGroup(
@@ -203,11 +215,14 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
                     .addComponent(nameLabel)
                     .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panel)
+                .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(chatInputText, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -249,6 +264,27 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         }
     }//GEN-LAST:event_logoutButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        SwingUtilities.invokeLater
+        (() -> {
+            FileTransferView fileframe = new FileTransferView();
+            
+            //fileview = new FileView();
+            //JPanel serverView = new ServerView(frame);
+            
+            fileframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //fileframe.getContentPane().add(fileview);
+            fileframe.setSize(600,400);
+            fileframe.setResizable(false);
+            fileframe.setLocationRelativeTo(null);
+            //frame.getContentPane().add(serverView);
+            //frame.getContentPane().add(serverView, "serverView");
+            fileframe.pack();
+            fileframe.setVisible(true);
+        });
+    }//GEN-LAST:event_jButton1ActionPerformed
+   
     private void sendNewMessage() {
         String inputMessage = chatInputText.getText();
         if (inputMessage.length() < 1)
@@ -262,12 +298,15 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
         try {
             chat.sendMessage(message);
         } catch (RemoteException ex) {
+            enterWelcomeView();
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField chatInputText;
     private javax.swing.JTextPane chatListTextArea;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
@@ -280,6 +319,17 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
     private javax.swing.JButton sendButton;
     private javax.swing.JTextArea userListTextArea;
     // End of variables declaration//GEN-END:variables
+    private void enterWelcomeView() {                                                
+        // TODO add your handling code here:
+       
+        this.chat = null;
+        this.setVisible(false);
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(new WelcomeView(frame));
+        //frame.getContentPane().add(welcomeView);
+        frame.setSize(350,400);
+        
+    } 
     private void addListeners() {
 
          chatInputText.addKeyListener(this);
@@ -298,7 +348,9 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
                 try {                       // to display whole chat list
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
+                    enterWelcomeView();
                     Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+                    return;
                 }
             }
         });
@@ -309,6 +361,8 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
             displayChatList();
             displayUserList();
         } catch (RemoteException ex) {
+            System.out.print("Servidor caido");
+            enterWelcomeView();
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -370,6 +424,7 @@ public class ChatClientView extends javax.swing.JPanel implements MouseListener,
                                 + "' width=50 height=50 /> </td></tr>";
                     }
                 } catch (ParseException ex) {
+                    enterWelcomeView();
                     Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
                 }                        
             }

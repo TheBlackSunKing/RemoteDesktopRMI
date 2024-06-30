@@ -18,7 +18,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="screen_label" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="759" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="1200" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -26,16 +26,13 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="screen_label" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="463" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="800" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JLabel" name="screen_label">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>

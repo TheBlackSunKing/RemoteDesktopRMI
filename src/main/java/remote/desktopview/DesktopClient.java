@@ -17,6 +17,7 @@ import view.WelcomeView;
 /**
  *
  * @author Usuario
+ * Este es el cliente 
  */
 public class DesktopClient {
     private IRemoteDesktop desktopClient;
@@ -39,18 +40,22 @@ public class DesktopClient {
         (() -> {
             JFrame frame = new JFrame();
             
-            JPanel DesktopView = new DesktopView(desktopClient, frame);
+            DesktopView desktopView = new DesktopView(desktopClient, frame);
             //JPanel serverView = new ServerView(frame);            
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.getContentPane().add(DesktopView);
+            frame.getContentPane().add(desktopView);
             //DesktopView.run();
-            frame.setSize(600,400);
+           
             //frame.setResizable(false);
-            //frame.setLocationRelativeTo(null);
+            
             //frame.getContentPane().add(serverView);
             //frame.getContentPane().add(serverView, "serverView");
+            frame.setSize(1500,900);
+            //frame.setLocationRelativeTo(null);
             frame.pack();
             frame.setVisible(true);
+            desktopView.setFrameSize();
+            
         });
     }  
 }

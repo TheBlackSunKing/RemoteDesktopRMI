@@ -27,33 +27,38 @@ import javax.swing.JLabel;
 
 /**
  *
- * @author vijani
+ * @author Jose
+ * 
+* Este el servidor RMI de Java, aqui se llevaran todo las interfaces que use RMI aqui.
+* por defecto se usara el port 20000 de llamarse el constructor por si solo.
+     
  */
-public class Server {
+public class RMIServer {
+    private String port;
+    private String ip;
     /**
-     * @param args the command line arguments
+     * Este el servidor de acceso remoto de Java, aqui se llevaran todo las interfaces que use RMI aqui.
+     * por defecto se usara el port 20000 de llamarse el constructor por si solo.
      */
-    public Server(){
+    public RMIServer(){
 
     }
 
-    public static void run(JLabel status) {
-        /*          
-        
-        Runtime.getRuntime().exec("rmiregistry 2020");
-        
-        LocateRegistry.createRegistry(2020);
+    /**
+    * @param  status  Recibe el mensaje del panel grafico para poder cambiarlo desde el metodo
+    * El metodo run enciende el servidor. Usando el ip y port adecuados del servidor.
+     * @param port: El puerto que desea abrir para el RMI
+     * 
+    * 
+    * @see         Image
+    */
+    public static void run(JLabel status, String port) {
 
-        try{  
-            Adder stub=new AdderRemote();  
-            Naming.rebind("rmi://localhost:2020/2020",stub);  
-        }catch(Exception e){System.out.println(e);}  
-        */
         try {
             System.out.println("comenzando Servidor");
             status.setText("starting Server");
-            Runtime.getRuntime().exec("rmiregistry 2000");
-            Registry registry = LocateRegistry.createRegistry(2000);
+            Runtime.getRuntime().exec("rmiregistry " + port);
+            Registry registry = LocateRegistry.createRegistry(Integer.parseInt(port));
 
             
             registry.rebind("chatServer", new ChatImpl()); //creates the remote object and registers it
@@ -62,9 +67,9 @@ public class Server {
             status.setText("Servidor comenzado");
             System.out.println("Server Started");
         } catch (RemoteException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RMIServer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RMIServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

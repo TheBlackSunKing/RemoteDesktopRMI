@@ -5,10 +5,19 @@
 package view;
 
 import chat.ChatInterface;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Enumeration;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
-import server.Server;
+import server.RMIServer;
+import server.TCPServer;
 
 /**
  *
@@ -16,28 +25,51 @@ import server.Server;
  */
 public class ServerView extends javax.swing.JPanel {
     JFrame frame;
-    Server server;
+    RMIServer Rmiserver;
+    TCPServer TcpServer;
     /**
      * Creates new form ServerView
      */
     
     public ServerView(JFrame frame) {
+        TcpServer = new TCPServer();
+        Rmiserver = new RMIServer();
+        
         frame.setSize(300, 400);
         this.frame = frame;
         initComponents();
-        server = new Server();
         this.setVisible(true);
         this.setSize(600,400);
-        server.run(Status);
+        this.getServerIp();
+        this.jButton1.setEnabled(false);
+        
+        //server.run(Status);
+        
     }
-    public ServerView(JFrame frame, Server server) {
+    public ServerView(JFrame frame, RMIServer server) {
         frame.setSize(300, 400);
         this.frame = frame;
         initComponents();
-        this.server = server;
-        this.setVisible(true);
+        this.Rmiserver = server;
+        this.setVisible(true);        
         this.setSize(600,400);
         //server.run(Status);
+        //this.getServerIp();
+    }
+    public void getServerIp(){
+        String ip;
+        ipListComboText.removeAllItems();
+        
+        try {
+            Vector<String> ipv4_addresses = TcpServer.getAllIpv4AddressesOnLocal();
+            for(String ipv4 : ipv4_addresses) {
+                this.ipListComboText.addItem(ipv4);
+            }
+        } catch (SocketException ex) {
+            Logger.getLogger(ServerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+       
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -53,6 +85,9 @@ public class ServerView extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        portTextField = new javax.swing.JTextField();
+        ipListComboText = new javax.swing.JComboBox<>();
+        startServerButton = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -61,8 +96,8 @@ public class ServerView extends javax.swing.JPanel {
 
         Status.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Status.setForeground(new java.awt.Color(255, 255, 255));
-        Status.setText("jLabel2");
-        jPanel1.add(Status, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
+        Status.setText("Sin Iniciar");
+        jPanel1.add(Status, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Copperplate Gothic Bold", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -75,7 +110,7 @@ public class ServerView extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 310, -1, -1));
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
 
@@ -92,6 +127,25 @@ public class ServerView extends javax.swing.JPanel {
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 300, 20));
 
+        portTextField.setText("2000");
+        portTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portTextFieldActionPerformed(evt);
+            }
+        });
+        jPanel1.add(portTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 110, -1));
+
+        ipListComboText.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel1.add(ipListComboText, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, -1, -1));
+
+        startServerButton.setText("Encender Servidor");
+        startServerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startServerButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(startServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, -1, -1));
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 400));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -99,21 +153,36 @@ public class ServerView extends javax.swing.JPanel {
         // TODO add your handling code here:
         this.setVisible(false);
         try {        
-            Registry registry = LocateRegistry.getRegistry("localhost", 2000);
+            Registry registry = LocateRegistry.getRegistry(Integer.parseInt(this.portTextField.getText()));
             ChatInterface chat = (ChatInterface)registry.lookup("chatServer");  //getting a remote reference       
             frame.getContentPane().removeAll();
-            frame.getContentPane().add(new ChatClientView(frame,chat,"Servidor", server));
+            frame.getContentPane().add(new ChatClientView(frame,chat,"Servidor", Rmiserver));
         } catch (Exception e) {
            e.printStackTrace();
         }        
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_portTextFieldActionPerformed
+
+    private void startServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startServerButtonActionPerformed
+        
+        Rmiserver.run(this.Status,this.portTextField.getText());        // TODO add your handling code here:
+        //this.ipListComboText.getSelectedItem().toString().trim(),
+        this.startServerButton.setEnabled(false);
+        this.jButton1.setEnabled(true);
+    }//GEN-LAST:event_startServerButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Status;
+    private javax.swing.JComboBox<String> ipListComboText;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JTextField portTextField;
+    private javax.swing.JButton startServerButton;
     // End of variables declaration//GEN-END:variables
 }

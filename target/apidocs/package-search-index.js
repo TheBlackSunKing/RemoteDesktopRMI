@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"chat"},{"l":"com.student.javasimplermi"},{"l":"remote.desktop"},{"l":"remote.desktopview"},{"l":"server"},{"l":"view"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"chat"},{"l":"chat.filetransfer"},{"l":"client"},{"l":"com.student.javasimplermi"},{"l":"remote.desktop"},{"l":"remote.desktopview"},{"l":"server"},{"l":"view"}];updateSearchResults();
